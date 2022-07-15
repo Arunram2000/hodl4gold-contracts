@@ -47,6 +47,12 @@ contract QuantumStaking is Ownable, ReentrancyGuard {
     // The pool limit (0 if none)
     uint256 public poolLimitPerUser;
 
+    //whitelisted address
+    mapping(address => bool) public whitelist;
+
+    //whether whitelist activated
+    bool public isWhitelisted;
+
     // The block number when staking starts.
     uint256 public startBlock;
     // The block number when staking ends.
@@ -212,6 +218,10 @@ contract QuantumStaking is Ownable, ReentrancyGuard {
      */
     function deposit(uint256 _amount) external nonReentrant {
         require(_amount > 0, "Amount should be greator than 0");
+
+        if (isWhitelisted) {
+            require(whitelist[msg.sender], "only whitelisted address allowed");
+        }
 
         UserInfo storage user = userInfo[msg.sender];
 
@@ -914,6 +924,33 @@ contract QuantumStaking is Ownable, ReentrancyGuard {
 
     function resetAllowances() external onlyOwner {
         _resetAllowances();
+    }
+
+    function addUsertoWhitelist(address _addUser) external onlyOwner {
+        require(isWhitelisted, "Whitelisting not turned on");
+        whitelist[_addUser] = true;
+    }
+
+    function removeUserFromWhitelist(address _removeUser) external onlyOwner {
+        require(isWhitelisted, "Whitelisting not turned on");
+        whitelist[_removeUser] = false;
+    }
+
+    function activateWhitelist(bool _isWhitelisted) external onlyOwner {
+        isWhitelisted = _isWhitelisted;
+    }
+
+    function addUsertoWhitelistBatch(address[] memory _users)
+        external
+        onlyOwner
+    {
+        if (!isWhitelisted) {
+            isWhitelisted = true;
+        }
+
+        for (uint256 i = 0; i <= _users.length - 1; i++) {
+            whitelist[_users[i]] = true;
+        }
     }
 
     /************************

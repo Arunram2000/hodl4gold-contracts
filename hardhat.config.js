@@ -25,7 +25,7 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1000,
+        runs: 100,
       },
     },
   },
@@ -33,7 +33,7 @@ module.exports = {
     bsctest: {
       url: secret.url,
       accounts: [
-        "55c1b5b4b56f95b64cbda819dc7a1b3bfbc24c142d9d6b50954113649c95572a",
+        "0ea9e2d55c083444976fcf1e878131c32c09789c2b713b1d5f14f8ecc843a9db",
       ],
     },
   },
